@@ -10,36 +10,42 @@ import Home from './Pages/Home.jsx';
 import Register from './Pages/Register.jsx';
 import Login from './Pages/Login.jsx';
 import Profile from './Pages/Profile.jsx';
+import AuthProvider from './Context/AuthProvider.jsx';
+
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App></App>,
-    children:[
+    children: [
       {
-      path:"/login",
-      element:<Login></Login>
-    },
+        path: "/login",
+        element: <Login></Login>
+      },
       {
-      path:"/",
-      element:<Home></Home>
-    },
+        path: "/",
+        element: <Home></Home>
+      },
       {
-      path:"/register",
-      element:<Register></Register>
-    },
+        path: "/register",
+        element: <Register></Register>
+      },
       {
-      path:"/profile",
-      element:<Profile></Profile>
-    },
-  
-  ]
+        path: "/profile",
+        element: <Profile></Profile>
+      },
+
+    ]
   },
 ]);
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-       <RouterProvider router={router} />
+    <AuthProvider>
+
+      <RouterProvider router={router} />
+      
+    </AuthProvider>
   </StrictMode>,
 )

@@ -1,23 +1,34 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import React, { useState } from 'react';
-import auth from '../firebase/firebase.config';
-import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 
+import  {React, useContext, useState } from 'react';
+
+import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
+import { AuthContext } from '../Context/AuthProvider';
 const Register = () => {
 
+  const {createUser}=useContext(AuthContext);
+  
+
     const [registerError,setRegisterError]=useState('');
-    const [registeredUser,setRegisteredUser]=useState(null);
+    const [register,setRegister]=useState(null);
      const [showPass,setShowPass]=useState(false);
     // user registration
     const handleRegister=(e)=>{
         e.preventDefault();
         setRegisterError('');
+
+        const name=e.target.name.value;
+        console.log(name);
+
         const email=e.target.email.value;
         console.log(email);
+
         const password=e.target.password.value;
         console.log(password);
+
         const termsAccept=e.target.terms.checked;
         console.log(termsAccept);
+
+
         
         if(password.length < 6 ){setRegisterError('Password should be at least 6 characters');
             return ;
@@ -30,19 +41,29 @@ const Register = () => {
           setRegisterError('Please accept our terms policy');
           return;
         }
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed up 
-            const user = userCredential.user;
-            console.log(user);
-            setRegisteredUser(user)
-            // ...
+
+        createUser(email,password)
+        .then(result=>{
+         console.log(result.user);
+         setRegister(result.user)
+
         })
-        .catch((error) => {
-            setRegisterError(error.message);
-            console.log(error.message);
-            // ..
-        });
+        .catch(error=>{
+          console.log(error);
+        })
+        // createUserWithEmailAndPassword(auth, email, password)
+        // .then((userCredential) => {
+        //     // Signed up 
+        //     const user = userCredential.user;
+        //     console.log(user);
+        //     setRegisteredUser(user)
+        //     // ...
+        // })
+        // .catch((error) => {
+        //     setRegisterError(error.message);
+        //     console.log(error.message);
+        //     // ..
+        // });
     }
 
     return (
@@ -64,6 +85,11 @@ const Register = () => {
        <form onSubmit={handleRegister} action="">
        <fieldset  className="fieldset ">
 
+         <div className='space-y-2'>
+         <label className="label text-lg">Name</label>
+         <input name='name' type="text " className="input w-full text-base" placeholder="Name" required />
+
+         </div>
          <div className='space-y-2'>
          <label className="label text-lg">Email</label>
          <input name='email' type="email " className="input w-full text-base" placeholder="Email" required />
@@ -88,7 +114,7 @@ const Register = () => {
            registerError && <p className='text-red-600 text-sm'>{registerError}</p>
        }
        {
-           registeredUser && <p className='text-green-600 text-sm'>User Registration Successfull</p>
+           register && <p className='text-green-600 text-sm'>User Registration Successfull</p>
        }
        </form>
        
