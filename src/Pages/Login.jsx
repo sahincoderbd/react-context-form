@@ -1,10 +1,12 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import React, { useState } from 'react';
+
+import React, { useContext, useState } from 'react';
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
-import auth from '../firebase/firebase.config';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../Context/AuthProvider';
 
 const Login = () => {
+
+  const {signInUser}=useContext(AuthContext);
 
     const [showPass,setShowPass]=useState(false);
     const [loginError,setLoginError]=useState('');
@@ -21,7 +23,7 @@ const Login = () => {
         const password=e.target.password.value;
         console.log(password);
         
-        signInWithEmailAndPassword(auth,email,password)
+        signInUser(email,password)
         .then(result=>{
           setLoginUser(result.user);
           console.log(result.user);
@@ -65,7 +67,10 @@ showPass ? <IoMdEyeOff/>: <IoMdEye className='text-amber-500'/>
 </div>
 
 
-<div className='mt-2'><Link to='/passwordReset' className="link link-hover text-sm">Forgot password?</Link></div>
+<div className='mt-2'>
+  <Link to='/passwordReset' className="link link-hover text-sm">Forgot password?</Link>
+  <span className='text-base ml-3'>Don't have an account ?  <Link to='/register' className="link link-hover text-green-500">Register</Link></span >
+</div>
 
 <button type='submit' className="btn btn-neutral mt-4 text-base">Login</button>
 </fieldset>
